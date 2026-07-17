@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# DB / local data
+*.sqlite3
+pgdata/
+
+# OS / editor
+.DS_Store
+.vscode/*
+!.vscode/settings.json
+*.log
+
+# Source documents (may contain client data, keep out of git unless explicitly needed)
+/extraction-pipeline/source-docs/*
+!/extraction-pipeline/source-docs/.gitkeep

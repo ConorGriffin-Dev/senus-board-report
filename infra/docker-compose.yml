@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: senus-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: senus
+      POSTGRES_PASSWORD: senus_dev_password
+      POSTGRES_DB: senus_board_report
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U senus -d senus_board_report"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
