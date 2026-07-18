@@ -25,8 +25,10 @@ pgdata/
 .DS_Store
 .vscode/*
 !.vscode/settings.json
+!.vscode/extensions.json
 *.log
 
 # Source documents (may contain client data, keep out of git unless explicitly needed)
 /extraction-pipeline/source-docs/*
 !/extraction-pipeline/source-docs/.gitkeep
+docs/Assiduous_TechGradAssignment.pdf
