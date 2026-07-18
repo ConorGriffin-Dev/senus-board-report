@@ -38,6 +38,33 @@ stating because it means the inventory cannot be reproduced by search alone.
 DOC-01 is publicly hosted by Euronext and is retrievable without
 authentication.
 
+### Source documents are not committed to this repository
+
+Standing decision. The source PDFs are excluded from version control via
+`.gitignore` at `extraction-pipeline/source-docs/`. They are Senus PLC
+investor communications and remain the Company's material, so they are not
+republished here.
+
+Consequence: the extraction run cannot be reproduced end to end from a clean
+clone. This is deliberate and mitigated as follows.
+
+- The extraction outputs are committed as fixture files under `fixtures/`,
+  so the pipeline downstream of the model call runs against real data
+  without the PDFs present.
+- Every extracted figure carries a source reference to document, page and
+  location, so any value can be traced back to a specific place in a
+  specific document and verified by a reviewer who obtains it independently.
+- The figure-level source reference table above records where each class of
+  data sits, so a reviewer knows what to check and where.
+- Validation notes in `docs/validation-notes/` record the sample checked and
+  the error rate found at the time of extraction.
+- DOC-01 is publicly retrievable at the URL given, so the annual figures are
+  independently verifiable by anyone.
+
+To obtain DOC-02 and DOC-03, retrieve them from the Senus investor relations
+portal at the URL given above and place them in
+`extraction-pipeline/source-docs/`. They are not obtainable by web search.
+
 ### Figure-level source references
 
 Extraction must populate a source reference for every line item. The

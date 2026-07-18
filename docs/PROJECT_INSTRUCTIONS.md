@@ -86,6 +86,23 @@ as it goes:
 - Prompts stored as versioned files, not inline strings.
 - Assumptions log: anything inferred rather than sourced, stated explicitly.
 
+## 4.1 Source document handling (standing decision)
+
+Source PDFs are not committed to the repository. They are Senus PLC investor
+communications and are not republished here. `.gitignore` excludes
+`extraction-pipeline/source-docs/`.
+
+Reproducibility is preserved through the fixture files rather than through
+the documents themselves. Extraction outputs are committed under `fixtures/`,
+every extracted figure carries a document, page and location reference, and
+validation notes record what was checked against source and the error rate
+found. A reviewer can verify any figure by obtaining the document
+independently and checking the stated location.
+
+This trades full end-to-end reproducibility for not redistributing client
+material. Revisit only if the documents are confirmed as freely
+redistributable.
+
 ## 5. Open items
 
 - Confirm backend language choice against real team preference.
