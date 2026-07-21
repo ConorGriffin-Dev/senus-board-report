@@ -18,7 +18,13 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, uuid_pk
-from app.models.enums import DATA_CLASSES, SEGMENT_TYPES, STATEMENTS, VALIDATION_STATUSES
+from app.models.enums import (
+    DATA_CLASSES,
+    SEGMENT_TYPES,
+    SIGN_CONVENTIONS,
+    STATEMENTS,
+    VALIDATION_STATUSES,
+)
 from app.models.source import ReportingPeriod, SourceDocument
 
 
@@ -34,6 +40,13 @@ class FinancialLineItem(Base):
     inconsistent, validation_status is set to flagged and the discrepancy is
     described in validation_note. Inventory Finding 1 is the worked example:
     HY2025 cost of sales is stored as printed and flagged.
+
+    sign_convention records whether the printed number carries its own sign.
+    DOC-02 prints "Group operating loss 483,753" as a positive number in the
+    profit and loss, and "-485,144" for the same underlying loss in the cash
+    flow statement. Both are stored as printed. The metric layer negates
+    negated_label rows before use, so the raw record stays faithful to the
+    document while calculations stay correct.
     """
 
     __tablename__ = "financial_line_item"
@@ -41,6 +54,7 @@ class FinancialLineItem(Base):
         CheckConstraint(_in("statement", STATEMENTS), name="ck_statement"),
         CheckConstraint(_in("data_class", DATA_CLASSES), name="ck_data_class"),
         CheckConstraint(_in("validation_status", VALIDATION_STATUSES), name="ck_validation_status"),
+        CheckConstraint(_in("sign_convention", SIGN_CONVENTIONS), name="ck_sign_convention"),
         CheckConstraint("confidence >= 0 AND confidence <= 1", name="ck_confidence_range"),
         UniqueConstraint(
             "source_document_id", "reporting_period_id", "label", name="uq_line_item_identity"
@@ -62,6 +76,7 @@ class FinancialLineItem(Base):
     value: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(3), nullable=False, default="EUR")
     statement: Mapped[str] = mapped_column(String(32), nullable=False)
+    sign_convention: Mapped[str] = mapped_column(String(16), nullable=False, default="as_printed")
 
     page_number: Mapped[int | None] = mapped_column(Integer)
     source_location: Mapped[str | None] = mapped_column(Text)

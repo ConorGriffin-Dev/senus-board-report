@@ -19,3 +19,9 @@ SEGMENT_TYPES = ("channel", "geography", "product")
 METRIC_UNITS = ("eur", "percent", "ratio", "months", "count")
 
 LINK_ROLES = ("numerator", "denominator", "prior_period", "current_period", "component")
+
+# as_printed: the number carries its own sign.
+# negated_label: a positive number represents a loss or outflow because the
+# label says so, e.g. "Group operating loss 483,753". The metric layer must
+# negate these before use.
+SIGN_CONVENTIONS = ("as_printed", "negated_label")
