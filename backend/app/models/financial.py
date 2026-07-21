@@ -20,6 +20,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, uuid_pk
 from app.models.enums import (
     DATA_CLASSES,
+    LINE_ITEM_UNITS,
     SEGMENT_TYPES,
     SIGN_CONVENTIONS,
     STATEMENTS,
@@ -47,6 +48,9 @@ class FinancialLineItem(Base):
     flow statement. Both are stored as printed. The metric layer negates
     negated_label rows before use, so the raw record stays faithful to the
     document while calculations stay correct.
+    unit distinguishes monetary line items from percentages and counts stated
+    in the source. currency is null for non-monetary items, enforced by
+    constraint, so a percentage can never be rendered with a currency symbol.
     """
 
     __tablename__ = "financial_line_item"
@@ -56,6 +60,11 @@ class FinancialLineItem(Base):
         CheckConstraint(_in("validation_status", VALIDATION_STATUSES), name="ck_validation_status"),
         CheckConstraint(_in("sign_convention", SIGN_CONVENTIONS), name="ck_sign_convention"),
         CheckConstraint("confidence >= 0 AND confidence <= 1", name="ck_confidence_range"),
+        CheckConstraint(_in("unit", LINE_ITEM_UNITS), name="ck_line_item_unit"),
+        CheckConstraint(
+            "(unit = 'eur' AND currency IS NOT NULL) OR (unit <> 'eur' AND currency IS NULL)",
+            name="ck_currency_matches_unit",
+        ),
         UniqueConstraint(
             "source_document_id", "reporting_period_id", "label", name="uq_line_item_identity"
         ),
@@ -74,9 +83,9 @@ class FinancialLineItem(Base):
 
     label: Mapped[str] = mapped_column(String(128), nullable=False)
     value: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
-    currency: Mapped[str] = mapped_column(String(3), nullable=False, default="EUR")
+    unit: Mapped[str] = mapped_column(String(16), nullable=False, default="eur")
+    currency: Mapped[str | None] = mapped_column(String(3), default="EUR")
     statement: Mapped[str] = mapped_column(String(32), nullable=False)
-    sign_convention: Mapped[str] = mapped_column(String(16), nullable=False, default="as_printed")
 
     page_number: Mapped[int | None] = mapped_column(Integer)
     source_location: Mapped[str | None] = mapped_column(Text)

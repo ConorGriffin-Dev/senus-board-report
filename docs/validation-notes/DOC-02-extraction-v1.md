@@ -9,7 +9,7 @@ Validated: 2026-07-21
 ## Method
 
 Every extracted figure was checked back against the source document rather
-than a sample. The fixture contains 91 line items and 2 targets, which is
+than a sample. The fixture contains 94 line items and 2 targets, which is
 small enough that a full census is achievable and gives a stronger result
 than a sample would.
 
@@ -28,13 +28,13 @@ and it produces a figure that is individually correct but wrong in context.
 
 | Dimension | Checked | Errors | Error rate |
 |---|---|---|---|
-| Value transcription | 93 | 0 | 0.0% |
-| Period attribution | 93 | 0 | 0.0% |
-| Page and location reference | 93 | 0 | 0.0% |
-| Classification | 93 | 2 | 2.2% |
-| **Overall** | **93** | **2** | **2.2%** |
+| Value transcription | 96 | 0 | 0.0% |
+| Period attribution | 96 | 0 | 0.0% |
+| Page and location reference | 96 | 0 | 0.0% |
+| Classification | 96 | 2 | 2.1% |
+| **Overall** | **96** | **2** | **2.1%** |
 
-Zero transcription errors across 91 line items and 2 targets. Two
+Zero transcription errors across 94 line items and 2 targets. Two
 classification defects, detailed below. Both are schema misuse rather than
 misreading of the source, and neither affects a figure's value or period.
 
@@ -95,8 +95,8 @@ genuinely useful board context, so excluding it loses something.
 
 ## Findings confirmed, not defects
 
-The extraction flagged eight items. All eight flags were verified as correct
-and appropriate.
+The extraction flagged eleven items. All eleven flags were verified as
+correct and appropriate.
 
 **The systematic 1 euro subtotal discrepancies.** Six subtotals are off by
 exactly 1 against the sum of their components: total current assets both
@@ -192,9 +192,10 @@ figures.
 
 ## Conclusion
 
-The extraction is fit for use. Zero transcription errors across 93 items,
-correct period attribution throughout, and all eight source inconsistencies
+The extraction is fit for use. Zero transcription errors across 96 items,
+correct period attribution throughout, and all eleven source inconsistencies
 correctly identified and flagged rather than absorbed.
 
-Two schema defects need resolving before further extraction runs, since both
-would recur. Neither blocks loading this fixture.
+Two schema defects were found and both have been resolved, since each would
+otherwise recur in the DOC-01 extraction. Neither blocked loading this
+fixture.

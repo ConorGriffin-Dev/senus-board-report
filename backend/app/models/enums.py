@@ -25,3 +25,13 @@ LINK_ROLES = ("numerator", "denominator", "prior_period", "current_period", "com
 # label says so, e.g. "Group operating loss 483,753". The metric layer must
 # negate these before use.
 SIGN_CONVENTIONS = ("as_printed", "negated_label")
+
+# Line items are usually monetary, but some are percentages or counts stated
+# in the source, e.g. "Gross margin of 81.7%". currency is meaningless for
+# those, so unit carries the meaning and currency is left null.
+LINE_ITEM_UNITS = ("eur", "percent", "count", "ratio")
+
+# threshold: a numeric level to be reached, e.g. ACV above 50,000.
+# milestone: an event expected by a date, e.g. EBITDA positive during FY2028.
+# Milestones have no meaningful target_value, so it is nullable.
+TARGET_KINDS = ("threshold", "milestone")

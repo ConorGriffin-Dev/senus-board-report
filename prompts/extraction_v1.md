@@ -55,6 +55,12 @@ commentary, and no markdown code fences.
    disclose depreciation, do not estimate it. If a period is not covered, do
    not extrapolate. Omission is the correct behaviour.
 
+6. **Check every subtotal.** Where a document prints a subtotal, verify it
+   against the sum of its components before moving on. Discrepancies are
+   often small and systematic, and only become visible when every subtotal is
+   checked rather than a sample. Flag each one individually, even where the
+   amount is immaterial, and note the likely cause.
+
 ### Confidence scoring
 
 Score honestly. This value drives how figures are presented to the reader, so
@@ -67,6 +73,10 @@ inflated confidence is worse than low confidence.
 | 0.70 to 0.84 | Figure stated in narrative prose as a definite value |
 | 0.40 to 0.69 | Figure stated as an approximation, a rounded value, or with hedging language such as "approximately" or "circa" |
 | Below 0.40 | Do not extract. Note it in `extraction_notes` instead |
+
+Reduce confidence by 0.04 where a subtotal is unlabelled in the source and
+you have assigned a label during extraction. Note the assignment in
+`validation_note`.
 
 ### Data class
 
@@ -116,6 +126,7 @@ Use `profit_and_loss`, `balance_sheet`, `cash_flow`, or `narrative`.
     {
       "label": "Turnover",
       "value": 354813.00,
+      "unit": "eur",
       "currency": "EUR",
       "period_label": "HY2026",
       "statement": "profit_and_loss",
@@ -126,6 +137,21 @@ Use `profit_and_loss`, `balance_sheet`, `cash_flow`, or `narrative`.
       "confidence": 0.99,
       "validation_status": "valid",
       "validation_note": null
+    },
+    {
+      "label": "Gross margin (as stated)",
+      "value": 81.70,
+      "unit": "percent",
+      "currency": null,
+      "period_label": "HY2026",
+      "statement": "narrative",
+      "data_class": "narrative",
+      "page_number": 1,
+      "source_location": "Highlights, first bullet block",
+      "sign_convention": "as_printed",
+      "confidence": 0.90,
+      "validation_status": "valid",
+      "validation_note": "Percentage stated by the company rather than computed. Retained for cross-checking the computed margin."
     }
   ],
   "segments": [
@@ -145,11 +171,24 @@ Use `profit_and_loss`, `balance_sheet`, `cash_flow`, or `narrative`.
   "targets": [
     {
       "target_type": "revenue_cagr",
+      "target_kind": "threshold",
       "target_value": 50.0,
       "unit": "percent",
       "target_period_label": "FY2030",
       "baseline_period_label": "FY2025",
       "baseline_value": 836991.00,
+      "page_number": 26,
+      "source_location": "Section 7.3, Key Performance Indicators",
+      "confidence": 0.95
+    },
+    {
+      "target_type": "ebitda_positive",
+      "target_kind": "milestone",
+      "target_value": null,
+      "unit": "count",
+      "target_period_label": "FY2028",
+      "baseline_period_label": null,
+      "baseline_value": null,
       "page_number": 26,
       "source_location": "Section 7.3, Key Performance Indicators",
       "confidence": 0.95
@@ -169,12 +208,23 @@ Use `profit_and_loss`, `balance_sheet`, `cash_flow`, or `narrative`.
 - `reporting_basis`: `company`, `group`, or `mixed`
 - `statement`: `profit_and_loss`, `balance_sheet`, `cash_flow`, `narrative`
 - `data_class`: `statement`, `narrative`, `approximation`
+- `unit` on line items: `eur`, `percent`, `count`, `ratio`. Use `eur` for
+  monetary figures. Use `percent` for percentages stated in the source, such
+  as a gross margin the company reports directly
+- `currency`: `EUR` where unit is `eur`. Must be `null` for any other unit.
+  A percentage has no currency, and emitting one would let a percentage be
+  rendered as money
 - `validation_status`: `valid` or `flagged`. Never `failed`; that status is
   set by the pipeline, not by extraction
 - `sign_convention`: `as_printed` or `negated_label`. Use `negated_label`
   where a positive number represents a loss or outflow because the label
   says so
 - `segment_type`: `channel`, `geography`, `product`
+- `target_kind`: `threshold` where the target is a numeric level to reach,
+  `milestone` where it is an event expected by a date. Milestones must have
+  `target_value` of `null`, with the date carried by `target_period_label`.
+  Encoding a year in `target_value` would let a reader compare an actual
+  against a year
 - `unit` on targets: `eur`, `percent`, `ratio`, `months`, `count`
 - `confidence`: number between 0 and 1, three decimal places maximum
 - Monetary values: plain numbers, no currency symbols, no thousand
@@ -196,13 +246,14 @@ appears erroneous:
 {
   "label": "Cost of sales",
   "value": 69600.00,
+  "unit": "eur",
   "currency": "EUR",
   "period_label": "HY2025",
   "statement": "profit_and_loss",
   "data_class": "statement",
   "page_number": 5,
   "source_location": "Consolidated Profit and Loss Account, six months to 31-Dec-24 column",
-  "sign_convention": "as_printed",
+  "sign_convention": "negated_label",
   "confidence": 0.95,
   "validation_status": "flagged",
   "validation_note": "Turnover 340,931 less cost of sales 69,600 gives 271,331, but stated gross profit is 272,331, a discrepancy of 1,000. Stated gross profit reconciles with both the operating loss and the stated 79.8% margin, so cost of sales appears misstated and should be 68,600. Value extracted as printed."
@@ -217,8 +268,13 @@ identifies which line is likely wrong and why, and does not alter anything.
 Check each of these:
 
 - Every line item has a page number and a source location
+- Every line item has a `unit`, and `currency` is null wherever unit is not
+  `eur`
 - Every figure is attributed to the correct period column
+- Every target has a `target_kind`, and milestone targets have a null
+  `target_value`
 - No derived or calculated values have been invented
-- Subtotals that do not reconcile are flagged, not corrected
+- Every subtotal has been checked against its components, and those that do
+  not reconcile are flagged, not corrected
 - Confidence scores reflect where each figure actually came from
 - The output is valid JSON with no code fences or surrounding text

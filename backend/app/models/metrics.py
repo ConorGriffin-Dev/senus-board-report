@@ -18,7 +18,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, uuid_pk
-from app.models.enums import LINK_ROLES, METRIC_UNITS
+from app.models.enums import LINK_ROLES, METRIC_UNITS, TARGET_KINDS
 from app.models.financial import FinancialLineItem
 from app.models.source import ReportingPeriod, SourceDocument
 
@@ -95,11 +95,22 @@ class Target(Base):
 
     Held separately from ComputedMetric so a target can never be rendered as
     though it were a reported actual.
+    target_kind separates thresholds from milestones. A threshold is a level
+    to reach, such as revenue CAGR of 50%, and carries a target_value. A
+    milestone is an event expected by a date, such as EBITDA positive during
+    FY2028, and has no meaningful numeric value. Encoding a year in
+    target_value would let a UI compare EBITDA against 2028.
     """
 
     __tablename__ = "target"
     __table_args__ = (
         CheckConstraint(_in("unit", METRIC_UNITS), name="ck_target_unit"),
+        CheckConstraint(_in("target_kind", TARGET_KINDS), name="ck_target_kind"),
+        CheckConstraint(
+            "(target_kind = 'threshold' AND target_value IS NOT NULL) "
+            "OR (target_kind = 'milestone' AND target_value IS NULL)",
+            name="ck_target_value_matches_kind",
+        ),
         UniqueConstraint("target_type", "target_period_label", name="uq_target_identity"),
     )
 
@@ -108,7 +119,8 @@ class Target(Base):
         UUID(as_uuid=True), ForeignKey("source_document.id"), nullable=False
     )
     target_type: Mapped[str] = mapped_column(String(64), nullable=False)
-    target_value: Mapped[Decimal] = mapped_column(Numeric(18, 4), nullable=False)
+    target_kind: Mapped[str] = mapped_column(String(16), nullable=False, default="threshold")
+    target_value: Mapped[Decimal | None] = mapped_column(Numeric(18, 4))
     unit: Mapped[str] = mapped_column(String(16), nullable=False)
     target_period_label: Mapped[str] = mapped_column(String(32), nullable=False)
 
