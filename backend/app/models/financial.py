@@ -87,8 +87,13 @@ class FinancialLineItem(Base):
     # silent alteration of the record.
     value: Mapped[Decimal] = mapped_column(Numeric(18, 4), nullable=False)
     unit: Mapped[str] = mapped_column(String(16), nullable=False, default="eur")
-    currency: Mapped[str | None] = mapped_column(String(3), default="EUR")
+    # No default. A default would be applied when the loader passes None
+    # explicitly, silently writing EUR onto percent and count rows and
+    # violating ck_currency_matches_unit. The unit column decides whether a
+    # currency belongs, so the caller must always be explicit.
+    currency: Mapped[str | None] = mapped_column(String(3))
     statement: Mapped[str] = mapped_column(String(32), nullable=False)
+    sign_convention: Mapped[str] = mapped_column(String(16), nullable=False, default="as_printed")
 
     page_number: Mapped[int | None] = mapped_column(Integer)
     source_location: Mapped[str | None] = mapped_column(Text)

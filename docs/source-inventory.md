@@ -289,3 +289,7 @@ the balance sheet states 669,550. The balance sheet figure is used.
 5. Figures stated in prose (bookings, R&D percentages, pipeline) must be
    distinguishable from figures extracted from statements, since their
    reliability differs. This is what the confidence score is for.
+6. Line items are records of what a document said, not of facts in the
+   abstract. Where two documents state the same figure, both are loaded and
+   the duplication is visible in the data. Any aggregation across line items
+   must deduplicate on label within period. See assumption A-15.

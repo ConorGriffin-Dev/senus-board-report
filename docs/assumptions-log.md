@@ -357,29 +357,43 @@ fact that a second source agrees is documented but not queryable.
 
 ---
 
-## A-15: The private placement is an explicit exception to A-14
+## A-15: Duplicate line items across documents are retained, not deduplicated
 
-**Issue:** DOC-01 attributes the private placement to FY2025, DOC-03 to
-HY2026. Same event, contradictory attribution. A blanket DOC-01-wins rule
-would take the wrong one.
+**Issue:** DOC-01 and DOC-03 both record the private placement gross proceeds
+of 1,100,000. DOC-01 attributed it to FY2025, DOC-03 to HY2026. After the
+A-13 reattribution moves the DOC-01 record to HY2026, both records describe
+the same event in the same period.
 
-**Assumption:** HY2026 is correct, per A-13. The DOC-01 record is
-reattributed rather than the DOC-03 record being preferred.
+**Assumption:** Both are retained. The database holds two line items for the
+private placement, one sourced to each document.
 
-**Basis:** The placement completed in December 2025. DOC-01's attribution
-reflects the document's own publication context rather than the event date.
+**Basis:** `uq_line_item_identity` is unique on source document, reporting
+period and label, so two documents recording the same fact do not collide by
+design. That design is deliberate: a line item is a record of what a
+particular document said, not a record of a fact in the abstract. Two
+independent sources stating the same figure is corroboration, and collapsing
+them would discard the fact that the figure appears twice.
 
-**Treatment:** Handled by the A-13 reattribution rule, which applies to the
-DOC-01 record. The DOC-03 record is then a duplicate on the same period and
-is skipped under A-14. Net effect is one row, correctly attributed, sourced
-to DOC-01.
+**Difference from A-14:** Targets and segments are deduplicated because their
+constraints do not include the source document, so a duplicate would fail the
+insert. That is a structural forcing rather than a considered preference. For
+line items no such forcing exists, and retaining both is the better
+behaviour.
 
-**Note:** This is the first contradiction between two fixtures. The
-resolution is recorded rather than silently applied, because a loader that
-silently reconciles conflicting sources is exactly the failure mode the
-raw-never-overwritten principle exists to prevent.
+**Consequence, and it matters:** any metric that aggregates line items must
+deduplicate. Summing financing inflows for HY2026 without deduplication would
+count the private placement twice. This is a real hazard and the metric layer
+must handle it explicitly rather than assuming one row per fact.
 
----
+**Treatment:** Both records loaded. The metric calculation layer selects
+specific labelled figures rather than aggregating across labels, and where
+aggregation is unavoidable it must deduplicate on label within period. No
+metric currently defined aggregates in a way that would double count, but the
+constraint is recorded so a future one does not introduce the bug silently.
+
+**Verification:** `check_load.py` reports line items by period and lists
+reattributed items, which is where the duplicate is visible. As at the last
+load, "Private placement gross proceeds" appears twice under HY2026.
 
 ## A-16: Unmapped period items are not loaded
 
