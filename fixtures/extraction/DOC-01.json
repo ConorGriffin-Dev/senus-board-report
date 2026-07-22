@@ -411,7 +411,7 @@
       "source_location": "Section 7.1, Profit and Loss commentary",
       "sign_convention": "negated_label",
       "confidence": 0.82,
-      "validation_status": "valid",
+      "validation_status": "flagged",
       "validation_note": "Stated in prose rather than a statement table. Implies FY2024 administrative expenses of 1,560,853 given the stated decrease of 274,795, which is consistent with gross profit 432,477 less operating loss 1,130,729 equals 1,563,206 only to within 2,353. Not extracted for FY2024 as it is not stated directly."
     },
     {

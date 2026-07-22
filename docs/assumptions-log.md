@@ -398,3 +398,31 @@ rather than reportable financial data.
 
 **Treatment:** Loader skips and logs. The figure remains in the committed
 fixture, so it is not lost, only not loaded.
+
+---
+
+## A-17: No document parser or cleaner modules are built
+
+**Decision:** The `parsers/` and `cleaners/` directories described in the
+original architecture are not implemented, and the empty directories are
+removed.
+
+**Basis:** Under the fixture-based AI method in project instructions section
+3.1, the model reads the source PDF directly through the chat interface.
+Nothing in the pipeline parses a document. Building pdfplumber and pandas
+modules that no code path calls would be dead code, which the project's own
+code style rules prohibit.
+
+**What is lost:** The architecture diagram shows a document parser and data
+cleaner feeding the extraction service. Those boxes describe the live-API
+architecture that the swap point would enable, not the fixture-based path
+actually in use. The diagram is accurate about intent and inaccurate about
+current implementation.
+
+**Treatment:** The README and the system architecture diagram must both
+state that parsing happens outside the codebase under the fixture method,
+and that the parser and cleaner stages would be needed if the swap point
+were wired to a live API. Directories removed rather than left empty.
+
+**Would change if:** A live API key were introduced, at which point document
+text would need extracting in code before the model call.
