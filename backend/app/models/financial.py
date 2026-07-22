@@ -82,7 +82,10 @@ class FinancialLineItem(Base):
     )
 
     label: Mapped[str] = mapped_column(String(128), nullable=False)
-    value: Mapped[Decimal] = mapped_column(Numeric(18, 2), nullable=False)
+    # Four decimal places rather than two: DOC-01 states the implied share
+    # price as 5.126, and rounding a raw source value at load would be a
+    # silent alteration of the record.
+    value: Mapped[Decimal] = mapped_column(Numeric(18, 4), nullable=False)
     unit: Mapped[str] = mapped_column(String(16), nullable=False, default="eur")
     currency: Mapped[str | None] = mapped_column(String(3), default="EUR")
     statement: Mapped[str] = mapped_column(String(32), nullable=False)

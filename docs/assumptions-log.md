@@ -299,3 +299,102 @@ is a different measure from customers served.
 **Treatment:** Segmentation metrics carry an availability scope of FY2025.
 The UI does not imply currency for these figures and labels the period
 clearly.
+
+---
+
+## A-13: Point-in-time facts are attributed to HY2026, not FY2025
+
+**Source:** DOC-01, various sections. Five items: private placement gross
+proceeds, post money enterprise valuation, implied share price on admission,
+issued share capital, employee headcount.
+
+**Issue:** These are facts as at Admission on 22 December 2025, which falls
+in HY2026. The extraction attributed all five to FY2025 because DOC-01 is
+dated December 2025 and presents them as current. `reporting_period_id` is
+not nullable, so every figure must belong to some period.
+
+**Assumption:** All five are reattributed to HY2026 at load, with the
+reattribution recorded in `validation_note` on each row.
+
+**Alternatives rejected:** Adding a point-in-time period entity would be
+disproportionate for five items and would complicate every period-scoped
+query. Skipping them would lose the private placement, which is material
+context for the cash position.
+
+**Basis:** 22 December 2025 falls within the six months to 31 December 2025.
+DOC-03 independently attributes the private placement to that period, which
+corroborates the treatment.
+
+**Treatment:** Loader reattributes and logs. Raw values unchanged.
+
+---
+
+## A-14: DOC-01 is authoritative for targets and segments
+
+**Issue:** DOC-01 and DOC-03 both carry the five Senus 2030 targets and
+overlapping segment data. `Target` is unique on target type and target
+period; `Segment` is unique on reporting period, segment type and segment
+name. Neither constraint includes the source document, so loading both
+fixtures collides.
+
+**Assumption:** DOC-01 wins. DOC-03 duplicates are skipped at load and the
+skip is logged.
+
+**Basis:** DOC-01 is the listing document, prepared under Director
+responsibility and reviewed by the Listing Sponsor and Euronext. DOC-03 is a
+marketing presentation. Where the two agree, which they do on every
+overlapping figure, the choice is immaterial to values and matters only for
+provenance. DOC-01 also carries fuller data: three product contract values
+against two, and full channel segmentation which DOC-03 lacks entirely.
+
+**Alternative rejected:** Widening the constraints to include source
+document would store the same target twice and push de-duplication to query
+time, where it would be easier to get wrong.
+
+**Consequence:** DOC-03's corroboration is recorded in its validation notes
+rather than in the database. The database shows one source per target; the
+fact that a second source agrees is documented but not queryable.
+
+---
+
+## A-15: The private placement is an explicit exception to A-14
+
+**Issue:** DOC-01 attributes the private placement to FY2025, DOC-03 to
+HY2026. Same event, contradictory attribution. A blanket DOC-01-wins rule
+would take the wrong one.
+
+**Assumption:** HY2026 is correct, per A-13. The DOC-01 record is
+reattributed rather than the DOC-03 record being preferred.
+
+**Basis:** The placement completed in December 2025. DOC-01's attribution
+reflects the document's own publication context rather than the event date.
+
+**Treatment:** Handled by the A-13 reattribution rule, which applies to the
+DOC-01 record. The DOC-03 record is then a duplicate on the same period and
+is skipped under A-14. Net effect is one row, correctly attributed, sourced
+to DOC-01.
+
+**Note:** This is the first contradiction between two fixtures. The
+resolution is recorded rather than silently applied, because a loader that
+silently reconciles conflicting sources is exactly the failure mode the
+raw-never-overwritten principle exists to prevent.
+
+---
+
+## A-16: Unmapped period items are not loaded
+
+**Source:** DOC-03, the 2023 fundraise of 800,000.
+
+**Issue:** The figure falls in FY2023. No FY2023 reporting period exists,
+because no FY2023 financial data is available from any source. The
+extraction correctly recorded `period_label` as `unmapped`.
+
+**Assumption:** Items with an unmapped period are skipped at load and the
+skip is logged with the reason.
+
+**Basis:** Seeding a period with no financial data attached would create an
+empty column in every period-scoped view. The figure is corporate history
+rather than reportable financial data.
+
+**Treatment:** Loader skips and logs. The figure remains in the committed
+fixture, so it is not lost, only not loaded.
