@@ -1,0 +1,197 @@
+{
+  "document": {
+    "doc_ref": "DOC-03",
+    "filename": "Senus short corporate presentation 19032026.pdf",
+    "document_type": "presentation",
+    "publication_date": "2026-03-19",
+    "reporting_entity": "Senus PLC",
+    "reporting_basis": "group",
+    "page_count": 14
+  },
+  "line_items": [
+    {
+      "label": "Fundraise 2023",
+      "value": 800000.0,
+      "unit": "eur",
+      "currency": "EUR",
+      "period_label": "unmapped",
+      "statement": "narrative",
+      "data_class": "narrative",
+      "page_number": 7,
+      "source_location": "Senus Evolution timeline, 2023 milestone",
+      "sign_convention": "as_printed",
+      "confidence": 0.85,
+      "validation_status": "flagged",
+      "validation_note": "Private investment round completed February 2023, which falls in FY2023. No FY2023 reporting period exists in this project, so period_label is unmapped. Corroborated by DOC-01 section 4.1 which dates it to February 2023 and states the same amount."
+    },
+    {
+      "label": "Private placement gross proceeds",
+      "value": 1100000.0,
+      "unit": "eur",
+      "currency": "EUR",
+      "period_label": "HY2026",
+      "statement": "narrative",
+      "data_class": "narrative",
+      "page_number": 7,
+      "source_location": "Senus Evolution timeline, 2025 milestone",
+      "sign_convention": "as_printed",
+      "confidence": 0.85,
+      "validation_status": "valid",
+      "validation_note": "Stated as 1.1m private placement and direct listing on Euronext Access Dublin. Attributed to HY2026 here, which is the correct period, unlike the DOC-01 record of the same event which is attributed to FY2025."
+    },
+    {
+      "label": "Enterprise customer accounts",
+      "value": 36.0,
+      "unit": "count",
+      "currency": null,
+      "period_label": "FY2025",
+      "statement": "narrative",
+      "data_class": "narrative",
+      "page_number": 10,
+      "source_location": "Expanding Addressable Market, Customer Evolution",
+      "sign_convention": "as_printed",
+      "confidence": 0.9,
+      "validation_status": "valid",
+      "validation_note": "Corroborates the DOC-01 figure of 36 Enterprise customers in FY2025."
+    },
+    {
+      "label": "Loamin cost reduction multiple",
+      "value": 10.0,
+      "unit": "ratio",
+      "currency": null,
+      "period_label": "HY2026",
+      "statement": "narrative",
+      "data_class": "approximation",
+      "page_number": 9,
+      "source_location": "M&A Execution, Loamin Integration, Better Market Offering",
+      "sign_convention": "as_printed",
+      "confidence": 0.45,
+      "validation_status": "valid",
+      "validation_note": "Stated as measurement at scale can be 10x more affordable using a combination of Senus and Loamin technology. Marketing claim with no defined baseline or methodology. Not a financial figure and must not be used in any computed metric."
+    }
+  ],
+  "segments": [
+    {
+      "segment_type": "geography",
+      "segment_name": "Outside Ireland",
+      "period_label": "FY2025",
+      "revenue_share_pct": 22.0,
+      "revenue_value": null,
+      "customer_count": null,
+      "avg_contract_value": null,
+      "page_number": 10,
+      "source_location": "Expanding Addressable Market, Customer Evolution, International growth target",
+      "confidence": 0.9
+    },
+    {
+      "segment_type": "geography",
+      "segment_name": "Ireland",
+      "period_label": "FY2025",
+      "revenue_share_pct": 78.0,
+      "revenue_value": null,
+      "customer_count": null,
+      "avg_contract_value": null,
+      "page_number": 11,
+      "source_location": "Senus 2030 slide, geographic target baseline",
+      "confidence": 0.9
+    },
+    {
+      "segment_type": "product",
+      "segment_name": "Senus SOIL",
+      "period_label": "FY2025",
+      "revenue_share_pct": null,
+      "revenue_value": null,
+      "customer_count": null,
+      "avg_contract_value": 12309.0,
+      "page_number": 10,
+      "source_location": "Expanding Addressable Market, Customer Evolution",
+      "confidence": 0.9
+    },
+    {
+      "segment_type": "product",
+      "segment_name": "Senus ERA",
+      "period_label": "FY2025",
+      "revenue_share_pct": null,
+      "revenue_value": null,
+      "customer_count": null,
+      "avg_contract_value": 58900.0,
+      "page_number": 10,
+      "source_location": "Expanding Addressable Market, Customer Evolution",
+      "confidence": 0.9
+    }
+  ],
+  "targets": [
+    {
+      "target_type": "revenue_cagr",
+      "target_kind": "threshold",
+      "target_value": 50.0,
+      "unit": "percent",
+      "target_period_label": "FY2030",
+      "baseline_period_label": null,
+      "baseline_value": null,
+      "page_number": 11,
+      "source_location": "Senus 2030 slide, headline",
+      "confidence": 0.95
+    },
+    {
+      "target_type": "enterprise_customer_count",
+      "target_kind": "threshold",
+      "target_value": 100.0,
+      "unit": "count",
+      "target_period_label": "FY2030",
+      "baseline_period_label": "FY2025",
+      "baseline_value": 36.0,
+      "page_number": 11,
+      "source_location": "Senus 2030 slide, first panel",
+      "confidence": 0.95
+    },
+    {
+      "target_type": "average_contract_value",
+      "target_kind": "threshold",
+      "target_value": 50000.0,
+      "unit": "eur",
+      "target_period_label": "FY2030",
+      "baseline_period_label": null,
+      "baseline_value": null,
+      "page_number": 11,
+      "source_location": "Senus 2030 slide, second panel",
+      "confidence": 0.95
+    },
+    {
+      "target_type": "ireland_revenue_share",
+      "target_kind": "threshold",
+      "target_value": 50.0,
+      "unit": "percent",
+      "target_period_label": "FY2030",
+      "baseline_period_label": "FY2025",
+      "baseline_value": 78.0,
+      "page_number": 11,
+      "source_location": "Senus 2030 slide, third panel",
+      "confidence": 0.95
+    },
+    {
+      "target_type": "ebitda_positive",
+      "target_kind": "milestone",
+      "target_value": null,
+      "unit": "count",
+      "target_period_label": "FY2028",
+      "baseline_period_label": null,
+      "baseline_value": null,
+      "page_number": 11,
+      "source_location": "Senus 2030 slide, banner",
+      "confidence": 0.95
+    }
+  ],
+  "extraction_notes": [
+    "This is a marketing presentation with no financial statements. It contains no profit and loss, balance sheet or cash flow data. Its value to this project is corroboration of figures sourced elsewhere, plus one figure not present in any other source.",
+    "The 2023 fundraise of 800,000 appears only here and in the DOC-01 corporate history. It falls in FY2023, for which no reporting period exists in this project, so it is recorded with period_label unmapped rather than being forced into an adjacent period.",
+    "All five Senus 2030 targets restate DOC-01 section 7.3 without variation. Loading both sources will produce duplicate target rows, since the Target table is unique on target_type and target_period_label. The loader must treat DOC-01 as authoritative for targets and either skip or link these as corroboration.",
+    "Segment figures likewise duplicate DOC-01. Segment is unique on reporting period, segment type and segment name, so the same collision applies. DOC-01 should win on both because it is the audited-adjacent primary source and gives fuller channel data.",
+    "The presentation gives average contract value for SOIL and ERA only. DOC-01 additionally gives TERRAIN at 21,524. No conflict, just less detail here.",
+    "The private placement is attributed to HY2026 in this record and to FY2025 in the DOC-01 record, because DOC-01 was published in December 2025 and presented it as a completed current event. HY2026 is the correct attribution. This is a genuine inconsistency between two fixtures for the same underlying event, and the loader will need to resolve it rather than loading both.",
+    "The 10x affordability claim for Loamin technology is a marketing statement with no stated baseline or methodology. Extracted at low confidence for completeness of the record and explicitly marked as unusable in computed metrics.",
+    "Title slide is dated March 2025 while the filename, page footers and content are all March 2026. Typographical error in the source. Publication date recorded as 2026-03-19 from the filename and footer.",
+    "Customer logos on page 5 name Arla, Bank of Ireland, Tirlan, Diageo, Lakeland Dairies, Carbery, Carbon AMS, ESA, First Milk, Farming Connect, Grennan, ABP, Department of Agriculture Food and the Marine, SRUC, Aurivo and EIT Food. These are customer identities without associated financial values. Not extracted, since no per-customer revenue data exists anywhere in the sources and the Customer entity was removed from the schema for that reason.",
+    "Market and regulatory statistics on the Growth Drivers slide, such as CSRD applying to 50,000 or more companies, are third party claims about the industry rather than Senus financial data. Not extracted."
+  ]
+}
